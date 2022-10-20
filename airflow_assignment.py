@@ -46,8 +46,9 @@ transform = BashOperator(
 )
 
 # define the task to extract data from tsv file
+# cut -d$'\t' -f5-7 /home/project/airflow/dags/finalassignment/staging/tollplaza-data.tsv | tr "\\t" "," > /home/project/airflow/dags/finalassignment/staging/tsv_data.csv
 transform = BashOperator(
-    task_id='extract_data_from_csv',
+    task_id='extract_data_from_tsv',
     bash_command='cut -d$\'\t\' -f5-7 /home/project/airflow/dags/finalassignment/tollplaza-data.tsv | tr "\\t" "," > /home/project/airflow/dags/finalassignment/staging/tsv_data.csv',
     dag=dag,
 )
