@@ -59,3 +59,17 @@ transform = BashOperator(
     bash_command='cut -b 59-62,63-67 /home/project/airflow/dags/finalassignment/staging/payment-data.txt | tr " " "," > /home/project/airflow/dags/finalassignment/staging/fixed_width_data.csv',
     dag=dag,
 )
+
+# define a task to consolidate data extracted from previous tasks
+transform = BashOperator(
+    task_id='consolidate_data',
+    bash_command='paste -d"," /home/project/airflow/dags/finalassignment/staging/csv_data.csv /home/project/airflow/dags/finalassignment/staging/tsv_data.csv /home/project/airflow/dags/finalassignment/staging/fixed_width_data.csv > /home/project/airflow/dags/finalassignment/staging/extracted_data.csv',
+    dag=dag,
+)
+
+# define a task to transform data
+transform = BashOperator(
+    task_id='transform_data',
+    bash_command='cut -d"," -f4 /home/project/airflow/dags/finalassignment/staging/extracted_data.csv | tr "[a-z]" "[A-Z]" > /home/project/airflow/dags/finalassignment/staging/transformed_data.csv',
+    dag=dag,
+)
