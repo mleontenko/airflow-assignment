@@ -73,3 +73,6 @@ transform = BashOperator(
     bash_command='cut -d"," -f4 /home/project/airflow/dags/finalassignment/staging/extracted_data.csv | tr "[a-z]" "[A-Z]" > /home/project/airflow/dags/finalassignment/staging/transformed_data.csv',
     dag=dag,
 )
+
+# task pipeline
+unzip_data >> extract_data_from_csv >> extract_data_from_tsv >> extract_data_from_fixed_width >> consolidate_data >> transform_data
