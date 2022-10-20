@@ -31,7 +31,7 @@ dag = DAG(
 # define the tasks
 
 # define the task to unzip data
-extract = BashOperator(
+unzip_data = BashOperator(
     task_id='unzip_data',
     bash_command='tar zxvf /home/project/tolldata.tgz -C /home/project/airflow/dags/finalassignment/staging',
     dag=dag,
@@ -39,7 +39,7 @@ extract = BashOperator(
 
 
 # define the task to extract data from csv file
-transform = BashOperator(
+extract_data_from_csv = BashOperator(
     task_id='extract_data_from_csv',
     bash_command='cut -d"," -f1-4 /home/project/airflow/dags/finalassignment/staging/vehicle-data.csv > /home/project/airflow/dags/finalassignment/staging/csv_data.csv',
     dag=dag,
@@ -47,28 +47,28 @@ transform = BashOperator(
 
 # define the task to extract data from tsv file
 # cut -d$'\t' -f5-7 /home/project/airflow/dags/finalassignment/staging/tollplaza-data.tsv | tr "\\t" "," > /home/project/airflow/dags/finalassignment/staging/tsv_data.csv
-transform = BashOperator(
+extract_data_from_tsv = BashOperator(
     task_id='extract_data_from_tsv',
     bash_command='cut -d$\'\t\' -f5-7 /home/project/airflow/dags/finalassignment/staging/tollplaza-data.tsv | tr "\\t" "," > /home/project/airflow/dags/finalassignment/staging/tsv_data.csv',
     dag=dag,
 )
 
 # define the task to extract data from fixed width file
-transform = BashOperator(
+extract_data_from_fixed_width = BashOperator(
     task_id='extract_data_from_fixed_width',
     bash_command='cut -b 59-62,63-67 /home/project/airflow/dags/finalassignment/staging/payment-data.txt | tr " " "," > /home/project/airflow/dags/finalassignment/staging/fixed_width_data.csv',
     dag=dag,
 )
 
 # define a task to consolidate data extracted from previous tasks
-transform = BashOperator(
+consolidate_data = BashOperator(
     task_id='consolidate_data',
     bash_command='paste -d"," /home/project/airflow/dags/finalassignment/staging/csv_data.csv /home/project/airflow/dags/finalassignment/staging/tsv_data.csv /home/project/airflow/dags/finalassignment/staging/fixed_width_data.csv > /home/project/airflow/dags/finalassignment/staging/extracted_data.csv',
     dag=dag,
 )
 
 # define a task to transform data
-transform = BashOperator(
+transform_data = BashOperator(
     task_id='transform_data',
     bash_command='cut -d"," -f4 /home/project/airflow/dags/finalassignment/staging/extracted_data.csv | tr "[a-z]" "[A-Z]" > /home/project/airflow/dags/finalassignment/staging/transformed_data.csv',
     dag=dag,
